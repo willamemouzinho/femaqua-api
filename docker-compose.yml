@@ -1,0 +1,11 @@
+name: femaqua-api
+
+services:
+    postgresql:
+        image: bitnami/postgresql:latest
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_USER=femaqua
+            - POSTGRES_PASSWORD=biztrip
+            - POSTGRES_DB=femaqua
