@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
-// Route::prefix('/auth')->group(function () {
-//     Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
-//     Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
-//     Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout')->middleware('auth:sanctum');
-// });
+Route::prefix('/auth')->group(function () {
+  Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
+  Route::post('/register', [AuthController::class, 'register'])->name('auth.register');
+  Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout')->middleware('auth:sanctum');
+});
 
 // Route::middleware('auth:sanctum')->group(function () {
 //     Route::prefix('/tools')->group(function () {
