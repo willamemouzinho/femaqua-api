@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\ToolController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('/auth')->group(function () {
@@ -9,12 +10,12 @@ Route::prefix('/auth')->group(function () {
   Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout')->middleware('auth:sanctum');
 });
 
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::prefix('/tools')->group(function () {
-//         Route::post('/', [ToolController::class, 'store'])->name('tools.store');
-//         Route::get('/', [ToolController::class, 'index'])->name('tools.index');
-//         Route::get('/{tool}', [ToolController::class, 'show'])->name('tools.show');
-//         Route::delete('/{tool}', [ToolController::class, 'destroy'])->name('tools.destroy');
-//         Route::put('/{tool}', [ToolController::class, 'update'])->name('tools.update');
-//     });
-// });
+Route::middleware('auth:sanctum')->group(function () {
+  Route::prefix('/tools')->group(function () {
+    Route::post('/', [ToolController::class, 'store'])->name('tools.store');
+    Route::get('/', [ToolController::class, 'index'])->name('tools.index');
+    Route::get('/{tool}', [ToolController::class, 'show'])->name('tools.show');
+    Route::delete('/{tool}', [ToolController::class, 'destroy'])->name('tools.destroy');
+    Route::put('/{tool}', [ToolController::class, 'update'])->name('tools.update');
+  });
+});
