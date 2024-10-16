@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Tool extends Model
 {
@@ -13,14 +15,19 @@ class Tool extends Model
         'title',
         'link',
         'description',
-        'tags',
         'user_id',
+        // 'tags',
     ];
 
-    protected function casts() : array
+    // protected function casts() : array
+    // {
+    //     return [
+    //         'tags' => 'array',
+    //     ];
+    // }
+
+    public function tags() : BelongsToMany
     {
-        return [
-            'tags' => 'array',
-        ];
+        return $this->belongsToMany(Tag::class, 'tag_tool');
     }
 }

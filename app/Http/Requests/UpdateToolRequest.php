@@ -17,7 +17,8 @@ class UpdateToolRequest extends FormRequest
             'title' => ['required', 'string'],
             'link' => ['required', 'url'],
             'description' => ['required', 'string'],
-            'tags' => ['nullable', 'array'],
+            'tags' => ['required', 'array'],
+            // 'tags' => ['present', 'array'],
         ];
     }
 }

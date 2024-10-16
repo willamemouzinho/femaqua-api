@@ -14,7 +14,8 @@ class ToolResource extends JsonResource
             "title" => $this->title,
             "link" => $this->link,
             "description" => $this->description,
-            "tags" => $this->tags,
+            // "tags" => $this->tags,
+            "tags" => $this->whenLoaded('tags', fn () => $this->tags->pluck('name')->toArray()),
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
         ];

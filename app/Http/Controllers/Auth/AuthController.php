@@ -17,7 +17,6 @@ class AuthController extends Controller
     {
         $userData = $request->validated();
         $hasEmail = User::select('id')->where("email", $userData["email"])->first();
-        // dd($hasEmail);
 
         if ($hasEmail) {
             return response()->json([
@@ -28,7 +27,11 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = User::create($userData);
+        $user = User::create([
+            'name' => $userData['name'],
+            'email' => $userData['email'],
+            'password' => $userData['password'],
+        ]);
         $access_token = $user->createToken('API Token')->plainTextToken;
 
         return response()->json([
