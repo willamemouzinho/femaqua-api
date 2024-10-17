@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Gate;
 
 /**
  * @OA\Tag(
- *     name="Tools",
+ *     name="tools",
  *     description="Endpoints para gerenciamento de ferramentas"
  * )
  */
@@ -24,7 +24,7 @@ class ToolController extends Controller
     /**
      * @OA\Get(
      *     path="/api/tools",
-     *     tags={"Tools"},
+     *     tags={"tools"},
      *     summary="Listar ferramentas",
      *     operationId="getTools",
      *     security={{"bearerAuth":{}}},
@@ -44,10 +44,56 @@ class ToolController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Lista de ferramentas",
+     *         description="Lista de ferramentas paginada",
      *         @OA\JsonContent(
-     *             type="array",
-     *             @OA\Items(ref="#/components/schemas/ToolResource")
+     *             type="object",
+     *             @OA\Property(
+     *                 property="current_page",
+     *                 type="integer",
+     *                 example=1
+     *             ),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(ref="#/components/schemas/ToolResource")
+     *             ),
+     *             @OA\Property(
+     *                 property="first_page_url",
+     *                 type="string",
+     *                 example="http://femaqua-api.test/api/tools?page=1"
+     *             ),
+     *             @OA\Property(
+     *                 property="from",
+     *                 type="integer",
+     *                 example=1
+     *             ),
+     *             @OA\Property(
+     *                 property="next_page_url",
+     *                 type="string",
+     *                 nullable=true,
+     *                 example=null
+     *             ),
+     *             @OA\Property(
+     *                 property="path",
+     *                 type="string",
+     *                 example="http://femaqua-api.test/api/tools"
+     *             ),
+     *             @OA\Property(
+     *                 property="per_page",
+     *                 type="integer",
+     *                 example=10
+     *             ),
+     *             @OA\Property(
+     *                 property="prev_page_url",
+     *                 type="string",
+     *                 nullable=true,
+     *                 example=null
+     *             ),
+     *             @OA\Property(
+     *                 property="to",
+     *                 type="integer",
+     *                 example=4
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -67,8 +113,8 @@ class ToolController extends Controller
         ]);
         $tagFilter = $validatedData['tag'] ?? null;
 
-        $tools = Tool::where('user_id', $request->user()->id)
-            ->when($tagFilter, function (Builder $query) use ($tagFilter) {
+        $tools = Tool::
+            when($tagFilter, function (Builder $query) use ($tagFilter) {
                 return $query->whereHas('tags', function (Builder $query) use ($tagFilter) {
                     $query->where('name', $tagFilter);
                 });
@@ -82,13 +128,13 @@ class ToolController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/tools/{tool}",
-     *     tags={"Tools"},
+     *     path="/api/tools/{id}",
+     *     tags={"tools"},
      *     summary="Obter uma ferramenta específica",
      *     operationId="getToolById",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="tool",
+     *         name="id",
      *         in="path",
      *         description="ID da ferramenta",
      *         required=true,
@@ -132,7 +178,7 @@ class ToolController extends Controller
     /**
      * @OA\Post(
      *     path="/api/tools",
-     *     tags={"Tools"},
+     *     tags={"tools"},
      *     summary="Criar uma nova ferramenta",
      *     operationId="createTool",
      *     security={{"bearerAuth":{}}},
@@ -195,13 +241,13 @@ class ToolController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/tools/{tool}",
-     *     tags={"Tools"},
+     *     path="/api/tools/{id}",
+     *     tags={"tools"},
      *     summary="Atualizar uma ferramenta existente",
      *     operationId="updateTool",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="tool",
+     *         name="id",
      *         in="path",
      *         description="ID da ferramenta",
      *         required=true,
@@ -294,13 +340,13 @@ class ToolController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/tools/{tool}",
-     *     tags={"Tools"},
+     *     path="/api/tools/{id}",
+     *     tags={"tools"},
      *     summary="Excluir uma ferramenta",
      *     operationId="deleteTool",
      *     security={{"bearerAuth":{}}},
      *     @OA\Parameter(
-     *         name="tool",
+     *         name="id",
      *         in="path",
      *         description="ID da ferramenta",
      *         required=true,
@@ -308,7 +354,10 @@ class ToolController extends Controller
      *     ),
      *     @OA\Response(
      *         response=204,
-     *         description="Ferramenta excluída com sucesso"
+     *         description="Ferramenta excluída com sucesso",
+     *         @OA\MediaType(
+     *             mediaType="application/json"
+     *         )
      *     ),
      *     @OA\Response(
      *         response=403,

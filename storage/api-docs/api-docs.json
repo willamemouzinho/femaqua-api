@@ -12,7 +12,7 @@
         "/api/auth/register": {
             "post": {
                 "tags": [
-                    "Auth"
+                    "auth"
                 ],
                 "summary": "Registrar um novo usuário",
                 "operationId": "register",
@@ -94,7 +94,7 @@
         "/api/auth/login": {
             "post": {
                 "tags": [
-                    "Auth"
+                    "auth"
                 ],
                 "summary": "Login de usuário",
                 "operationId": "login",
@@ -166,13 +166,16 @@
         "/api/auth/logout": {
             "post": {
                 "tags": [
-                    "Auth"
+                    "auth"
                 ],
                 "summary": "Logout de usuário",
                 "operationId": "logout",
                 "responses": {
                     "204": {
-                        "description": "Logout realizado com sucesso"
+                        "description": "Logout realizado com sucesso",
+                        "content": {
+                            "application/json": {}
+                        }
                     },
                     "401": {
                         "description": "Não autenticado",
@@ -201,7 +204,7 @@
         "/api/tools": {
             "get": {
                 "tags": [
-                    "Tools"
+                    "tools"
                 ],
                 "summary": "Listar ferramentas",
                 "operationId": "getTools",
@@ -229,14 +232,53 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Lista de ferramentas",
+                        "description": "Lista de ferramentas paginada",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/ToolResource"
-                                    }
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/ToolResource"
+                                            }
+                                        },
+                                        "first_page_url": {
+                                            "type": "string",
+                                            "example": "http://femaqua-api.test/api/tools?page=1"
+                                        },
+                                        "from": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "next_page_url": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "path": {
+                                            "type": "string",
+                                            "example": "http://femaqua-api.test/api/tools"
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "prev_page_url": {
+                                            "type": "string",
+                                            "example": null,
+                                            "nullable": true
+                                        },
+                                        "to": {
+                                            "type": "integer",
+                                            "example": 4
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -266,7 +308,7 @@
             },
             "post": {
                 "tags": [
-                    "Tools"
+                    "tools"
                 ],
                 "summary": "Criar uma nova ferramenta",
                 "operationId": "createTool",
@@ -359,16 +401,16 @@
                 ]
             }
         },
-        "/api/tools/{tool}": {
+        "/api/tools/{id}": {
             "get": {
                 "tags": [
-                    "Tools"
+                    "tools"
                 ],
                 "summary": "Obter uma ferramenta específica",
                 "operationId": "getToolById",
                 "parameters": [
                     {
-                        "name": "tool",
+                        "name": "id",
                         "in": "path",
                         "description": "ID da ferramenta",
                         "required": true,
@@ -430,13 +472,13 @@
             },
             "put": {
                 "tags": [
-                    "Tools"
+                    "tools"
                 ],
                 "summary": "Atualizar uma ferramenta existente",
                 "operationId": "updateTool",
                 "parameters": [
                     {
-                        "name": "tool",
+                        "name": "id",
                         "in": "path",
                         "description": "ID da ferramenta",
                         "required": true,
@@ -568,13 +610,13 @@
             },
             "delete": {
                 "tags": [
-                    "Tools"
+                    "tools"
                 ],
                 "summary": "Excluir uma ferramenta",
                 "operationId": "deleteTool",
                 "parameters": [
                     {
-                        "name": "tool",
+                        "name": "id",
                         "in": "path",
                         "description": "ID da ferramenta",
                         "required": true,
@@ -586,7 +628,10 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Ferramenta excluída com sucesso"
+                        "description": "Ferramenta excluída com sucesso",
+                        "content": {
+                            "application/json": {}
+                        }
                     },
                     "403": {
                         "description": "Permissão negada",
@@ -725,11 +770,11 @@
     },
     "tags": [
         {
-            "name": "Auth",
+            "name": "auth",
             "description": "Endpoints relacionados à autenticação de usuários"
         },
         {
-            "name": "Tools",
+            "name": "tools",
             "description": "Endpoints para gerenciamento de ferramentas"
         }
     ]

@@ -39,7 +39,7 @@ Para executar o projeto, você precisará dos seguintes requisitos:
 - **PHP** >= 8.2
 - **Composer**
 - **Docker** (para gerenciamento de banco de dados)
-- **Ferramenta de desenvolvimento local** (Herd, Laravel Valet, XAMPP, WAMP, ou outro servidor web)
+- **Servidor web** (Nginx ou Apache por exemplo)
 
 ## Instalação
 
@@ -133,24 +133,19 @@ O servidor estará disponível em `http://localhost:PORT`.
 
 ## Testes
 
-Usando Pest
+Execute os testes (de feature) rodando o comando abaixo:
 
+```bash
 php artisan test
+```
 
 ## Documentação
 
-Usando L5-Swagger
+Para acessar a documentação Swagger acesse o `APP_URL/api/docs` no seu navegador, por exemplo <http://localhost:8000/api/docs>.
 
-php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
-php artisan l5-swagger:generate
-APP_URL/api/docs, por exemplo <http://localhost:8000/api/docs>
+![Logo da API](.github/l5-swagger-femaqua.png)
 
-## Informações Adicionais
+## !!Informações Adicionais
 
 - A autenticação foi implementada usando **Laravel Sanctum**, que permite a autenticação via API Tokens. Os tokens tem o tempo de expiração de uma semana.
 - O banco de dados utilizado é o **PostgreSQL**, configurado com Docker.
-
-Sugestões de melhorias futuras:
-
-- Implementar testes unitários e de integração com `phpunit`.
-- Adicionar documentação completa da API utilizando Swagger ou outro framework de documentação.

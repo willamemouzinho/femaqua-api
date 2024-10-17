@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 
 /**
  * @OA\Tag(
- *     name="Auth",
+ *     name="auth",
  *     description="Endpoints relacionados à autenticação de usuários"
  * )
  */
@@ -22,7 +22,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/auth/register",
-     *     tags={"Auth"},
+     *     tags={"auth"},
      *     summary="Registrar um novo usuário",
      *     operationId="register",
      *     @OA\RequestBody(
@@ -78,7 +78,7 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/auth/login",
-     *     tags={"Auth"},
+     *     tags={"auth"},
      *     summary="Login de usuário",
      *     operationId="login",
      *     @OA\RequestBody(
@@ -126,13 +126,16 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/api/auth/logout",
-     *     tags={"Auth"},
+     *     tags={"auth"},
      *     summary="Logout de usuário",
      *     operationId="logout",
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=204,
-     *         description="Logout realizado com sucesso"
+     *         description="Logout realizado com sucesso",
+     *         @OA\MediaType(
+     *             mediaType="application/json"
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
