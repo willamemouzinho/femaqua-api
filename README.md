@@ -135,6 +135,8 @@ O servidor estará disponível em `http://localhost:PORT`.
 
 Usando Pest
 
+php artisan test
+
 ## Documentação
 
 Usando L5-Swagger
