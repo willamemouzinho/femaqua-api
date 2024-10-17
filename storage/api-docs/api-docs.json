@@ -447,6 +447,22 @@
                             }
                         }
                     },
+                    "403": {
+                        "description": "Permissão negada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You do not own this tool."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Não autenticado",
                         "content": {

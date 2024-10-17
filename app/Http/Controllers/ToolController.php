@@ -114,7 +114,8 @@ class ToolController extends Controller
         $tagFilter = $validatedData['tag'] ?? null;
 
         $tools = Tool::
-            when($tagFilter, function (Builder $query) use ($tagFilter) {
+            where('user_id', $request->user()->id)
+            ->when($tagFilter, function (Builder $query) use ($tagFilter) {
                 return $query->whereHas('tags', function (Builder $query) use ($tagFilter) {
                     $query->where('name', $tagFilter);
                 });
@@ -153,6 +154,13 @@ class ToolController extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=403,
+     *         description="Permissão negada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="You do not own this tool.")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=401,
      *         description="Não autenticado",
      *         @OA\JsonContent(
@@ -170,6 +178,10 @@ class ToolController extends Controller
 
         if (! $tool) {
             return response()->json(['message' => 'Tool not found.'], 404);
+        }
+
+        if (! Gate::allows('view', $tool)) {
+            return response()->json(['message' => 'You do not own this tool.'], 403);
         }
 
         return response()->json(new ToolResource($tool), 200);

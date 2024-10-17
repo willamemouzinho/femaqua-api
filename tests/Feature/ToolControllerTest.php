@@ -4,7 +4,6 @@ use App\Models\Tag;
 use App\Models\Tool;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Sanctum\Sanctum;
 
 uses(RefreshDatabase::class);
@@ -214,6 +213,25 @@ describe('Get a specific tool', function () {
             ->assertStatus(404)
             ->assertJson([
                 'message' => 'Tool not found.'
+            ]);
+    });
+
+    it('cannot retrieve an specific tool if you are not the creator', function () {
+        $owner = User::factory()->create();
+        $anotherUser = User::factory()->create();
+        $tool = Tool::
+            factory()
+            ->has(Tag::factory()->count(3))
+            ->create([
+                'user_id' => $anotherUser->id
+            ]);
+        Sanctum::actingAs($owner);
+
+        $response = $this->getJson("/api/tools/{$tool->id}");
+        $response
+            ->assertStatus(403)
+            ->assertJson([
+                'message' => 'You do not own this tool.',
             ]);
     });
 
