@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PaginatedToolResource;
 use App\Http\Resources\ToolResource;
 use App\Models\Tool;
 use App\Http\Requests\StoreToolRequest;
@@ -11,341 +12,165 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Log;
 
+/**
+ * @OA\Tag(
+ *     name="Tools",
+ *     description="Endpoints para gerenciamento de ferramentas"
+ * )
+ */
 class ToolController extends Controller
 {
-    public function indexOK(Request $request) : JsonResponse
-    {
-        $request->validate([
-            'page' => 'nullable|integer',
-            'tag' => 'nullable|string|max:255',
-        ]);
-        $tag = $request->query('tag');
-
-        $tools = Tool::select(
-            'id',
-            'title',
-            'link',
-            'description',
-            'tags',
-            'created_at',
-            'updated_at',
-        )
-            ->where('user_id', $request->user()->id)
-            ->when($tag, function (Builder $query, string $tag) {
-                $query->whereJsonContains('tags', $tag);
-            })
-            ->orderBy('updated_at', 'desc')->paginate(10);
-
-
-        return response()->json([
-            'meta' => [
-                'status' => 'success',
-                'message' => 'Tools retrieved successfully.',
-            ],
-            'data' => ['tools' => $tools],
-        ], 200);
-    }
-
-    public function storeOK(StoreToolRequest $request) : JsonResponse
-    {
-        $toolData = $request->validated();
-        $tool = Tool::create([...$toolData, 'user_id' => $request->user()->id]);
-
-        return response()->json([
-            'meta' => [
-                'status' => 'success',
-                'message' => 'Tool created successfully.',
-            ],
-            'data' => new ToolResource($tool),
-        ], 201);
-    }
-
-    public function showOK(Request $request, string $toolId) : JsonResponse
-    {
-        $tool = Tool::select(
-            'id',
-            'title',
-            'link',
-            'description',
-            'tags',
-            'created_at',
-            'updated_at',
-            'user_id',
-        )->where('id', $toolId)->first();
-
-        if (! $tool) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'Tool not found.',
-                ],
-            ], 404);
-        }
-
-        if (! Gate::allows('view', $tool)) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'You do not own this tool.',
-                ],
-            ], 403);
-        }
-
-        return response()->json([
-            'meta' => [
-                'status' => 'success',
-                'message' => 'Tool retrieved successfully.',
-            ],
-            'data' => [
-                'tool' => new ToolResource($tool),
-            ],
-        ], 200);
-    }
-
-    public function updateOK(UpdateToolRequest $request, string $toolId) : JsonResponse
-    {
-        $tool = Tool::select(
-            'id',
-            'title',
-            'link',
-            'description',
-            'tags',
-            'created_at',
-            'updated_at',
-            'user_id',
-        )->where('id', $toolId)->first();
-
-        if (! $tool) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'Tool not found.',
-                ],
-            ], 404);
-        }
-
-        if (! Gate::allows('update', $tool)) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'You do not own this tool.',
-                ],
-            ], 403);
-        }
-
-        $toolData = $request->validated();
-        $tool->update($toolData);
-
-        return response()->json([
-            'meta' => [
-                'status' => 'success',
-                'message' => 'Tool updated successfully.',
-            ],
-            'data' => [
-                'tool' => new ToolResource($tool),
-            ],
-        ], 200);
-    }
-
-    public function destroyOK(string $toolId) : JsonResponse
-    {
-        $tool = Tool::select('user_id')->where('id', $toolId)->first();
-
-        if (! $tool) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'Tool not found.',
-                ],
-            ], 404);
-        }
-
-        if (! Gate::allows('delete', $tool)) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'You do not own this tool.',
-                ],
-            ], 403);
-        }
-
-        $tool->delete();
-
-        return response()->json([
-            'meta' => [
-                'status' => 'success',
-                'message' => 'Tool deleted successfully.',
-            ],
-        ], 200);
-    }
-
-    // NEWS
-
+    /**
+     * @OA\Get(
+     *     path="/api/tools",
+     *     tags={"Tools"},
+     *     summary="Listar ferramentas",
+     *     operationId="getTools",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Número da página para paginação",
+     *         required=false,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="tag",
+     *         in="query",
+     *         description="Filtrar ferramentas por tag",
+     *         required=false,
+     *         @OA\Schema(type="string", example="PHP")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Lista de ferramentas",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/ToolResource")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autenticado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
+     * )
+     */
     public function index(Request $request) : JsonResponse
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'page' => 'nullable|integer',
             'tag' => 'nullable|string|max:255',
         ]);
-        $tagFilter = $request->query('tag');
+        $tagFilter = $validatedData['tag'] ?? null;
 
-        if ($tagFilter) {
-            $tools = Tool::
-                where('user_id', $request->user()->id)
-                ->whereHas('tags', function (Builder $query) use ($tagFilter) {
+        $tools = Tool::where('user_id', $request->user()->id)
+            ->when($tagFilter, function (Builder $query) use ($tagFilter) {
+                return $query->whereHas('tags', function (Builder $query) use ($tagFilter) {
                     $query->where('name', $tagFilter);
-                })
-                ->with('tags')
-                ->paginate();
-        } else {
-            $tools = Tool::
-                where('user_id', $request->user()->id)
-                ->with('tags')
-                ->paginate();
-        }
+                });
+            })
+            ->with('tags')
+            ->orderBy('created_at', 'desc')
+            ->simplePaginate(10);
 
-        return response()->json([
-            'meta' => [
-                'status' => 'success',
-                'message' => 'Tools retrieved successfully.',
-            ],
-            'data' => [
-                'tools' => ToolResource::collection($tools)
-            ],
-        ], 200);
+        return response()->json(new PaginatedToolResource($tools), 200);
     }
 
-    public function show(Request $request, string $toolId) : JsonResponse
+    /**
+     * @OA\Get(
+     *     path="/api/tools/{tool}",
+     *     tags={"Tools"},
+     *     summary="Obter uma ferramenta específica",
+     *     operationId="getToolById",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="tool",
+     *         in="path",
+     *         description="ID da ferramenta",
+     *         required=true,
+     *         @OA\Schema(type="string", example="1")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Detalhes da ferramenta",
+     *         @OA\JsonContent(ref="#/components/schemas/ToolResource")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ferramenta não encontrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Tool not found.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autenticado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
+     * )
+     */
+    public function show(string $toolId) : JsonResponse
     {
         $tool = Tool::
             where('id', $toolId)
             ->with('tags')
             ->first();
 
-
         if (! $tool) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'Tool not found.',
-                ],
-            ], 404);
+            return response()->json(['message' => 'Tool not found.'], 404);
         }
 
-        return response()->json([
-            'meta' => [
-                'status' => 'success',
-                'message' => 'Tool retrieved successfully.',
-            ],
-            'data' => [
-                'tool' => new ToolResource($tool),
-            ],
-        ], 200);
+        return response()->json(new ToolResource($tool), 200);
     }
 
-    public function update(UpdateToolRequest $request, string $toolId) : JsonResponse
-    {
-        $tool = Tool::
-            where('id', $toolId)
-            ->with('tags')
-            ->first();
-
-        if (! $tool) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'Tool not found.',
-                ],
-            ], 404);
-        }
-
-        if (! Gate::allows('update', $tool)) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'You do not own this tool.',
-                ],
-            ], 403);
-        }
-
-        $toolData = $request->validated();
-        $tool->update([
-            'title' => $toolData['title'],
-            'link' => $toolData['link'],
-            'description' => $toolData['description'],
-        ]);
-
-        // if (count($toolData['tags']) > 0) {
-        //     foreach ($toolData['tags'] as $tag) {
-        //         $hasTag = Tag::where('name', $tag)->first();
-        //         if (! $hasTag) {
-        //             $newTag = Tag::create(['name' => $tag]);
-        //             $tool->tags()->attach($newTag->id);
-        //         } else {
-        //             $tool->tags()->attach($hasTag->id);
-        //         }
-        //     }
-        // }
-
-        if (($toolData['tags'])) {
-            $tagIds = [];
-            foreach ($toolData['tags'] as $tagName) {
-                $tag = Tag::firstOrCreate(['name' => $tagName]);
-                $tagIds[] = $tag->id;
-            }
-
-            // Atualizar a relação de tags
-            $tool->tags()->sync($tagIds);
-        }
-
-        // Carregar as tags relacionadas
-        $tool->load('tags');
-
-        return response()->json([
-            'meta' => [
-                'status' => 'success',
-                'message' => 'Tool updated successfully.',
-            ],
-            'data' => [
-                'tool' => new ToolResource($tool),
-            ],
-        ], 200);
-    }
-
-    public function destroy(string $toolId) : JsonResponse
-    {
-        $tool = Tool::where('id', $toolId)->first();
-
-        if (! $tool) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'Tool not found.',
-                ],
-            ], 404);
-        }
-
-        if (! Gate::allows('delete', $tool)) {
-            return response()->json([
-                'meta' => [
-                    'status' => 'error',
-                    'message' => 'You do not own this tool.',
-                ],
-            ], 403);
-        }
-
-        $tool->delete();
-
-        return response()->json([
-            'meta' => [
-                'status' => 'success',
-                'message' => 'Tool deleted successfully.',
-            ],
-        ], 200);
-    }
-
+    /**
+     * @OA\Post(
+     *     path="/api/tools",
+     *     tags={"Tools"},
+     *     summary="Criar uma nova ferramenta",
+     *     operationId="createTool",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"title","link","description","tags"},
+     *             @OA\Property(property="title", type="string", example="Laravel"),
+     *             @OA\Property(property="link", type="string", format="url", example="https://laravel.com"),
+     *             @OA\Property(property="description", type="string", example="Framework PHP para aplicações web"),
+     *             @OA\Property(
+     *                 property="tags",
+     *                 type="array",
+     *                 @OA\Items(type="string", example="PHP")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Ferramenta criada com sucesso",
+     *         @OA\JsonContent(ref="#/components/schemas/ToolResource")
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autenticado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
+     * )
+     */
     public function store(StoreToolRequest $request) : JsonResponse
     {
         $toolData = $request->validated();
@@ -358,39 +183,170 @@ class ToolController extends Controller
 
         $tagIds = [];
         foreach ($toolData['tags'] as $tagName) {
-            $tag = Tag::firstOrCreate(['name' => $tagName]);
+            $tag = Tag::firstOrCreate(['name' => strtolower($tagName)]);
             $tagIds[] = $tag->id;
         }
 
-        // Associar as tags à tool
         $tool->tags()->sync($tagIds);
-
-        // Carregar as tags relacionadas
         $tool->load('tags');
 
         return response()->json(new ToolResource($tool), 201);
+    }
 
-        // if (count($toolData['tags']) > 0) {
-        //     foreach ($toolData['tags'] as $tag) {
-        //         $hasTag = Tag::where('name', $tag)->first();
-        //         if (! $hasTag) {
-        //             $newTag = Tag::create(['name' => $tag]);
-        //             $tool->tags()->attach($newTag->id);
-        //         } else {
-        //             $tool->tags()->attach($hasTag->id);
-        //         }
-        //     }
-        // }
+    /**
+     * @OA\Put(
+     *     path="/api/tools/{tool}",
+     *     tags={"Tools"},
+     *     summary="Atualizar uma ferramenta existente",
+     *     operationId="updateTool",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="tool",
+     *         in="path",
+     *         description="ID da ferramenta",
+     *         required=true,
+     *         @OA\Schema(type="string", example="1")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"title","link","description","tags"},
+     *             @OA\Property(property="title", type="string", example="Laravel"),
+     *             @OA\Property(property="link", type="string", format="url", example="https://laravel.com"),
+     *             @OA\Property(property="description", type="string", example="Framework PHP atualizado"),
+     *             @OA\Property(
+     *                 property="tags",
+     *                 type="array",
+     *                 @OA\Items(type="string", example="PHP")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Ferramenta atualizada com sucesso",
+     *         @OA\JsonContent(ref="#/components/schemas/ToolResource")
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Permissão negada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="You do not own this tool.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ferramenta não encontrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Tool not found.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autenticado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
+     * )
+     */
+    public function update(UpdateToolRequest $request, string $toolId) : JsonResponse
+    {
+        $tool = Tool::
+            where('id', $toolId)
+            ->with('tags')
+            ->first();
 
-        // $tool->load('tags');
-        // $tool->tags = $tool->tags->pluck('name')->toArray();
+        if (! $tool) {
+            return response()->json(['message' => 'Tool not found.'], 404);
+        }
 
-        // return response()->json([
-        //     'meta' => [
-        //         'status' => 'success',
-        //         'message' => 'Tool created successfully.',
-        //     ],
-        //     'data' => new ToolResource($tool),
-        // ], 201);
+        if (! Gate::allows('update', $tool)) {
+            return response()->json(['message' => 'You do not own this tool.'], 403);
+        }
+
+        $toolData = $request->validated();
+        $tool->update([
+            'title' => $toolData['title'],
+            'link' => $toolData['link'],
+            'description' => $toolData['description'],
+        ]);
+
+        if (($toolData['tags'])) {
+            $tagIds = [];
+            foreach ($toolData['tags'] as $tagName) {
+                $tag = Tag::firstOrCreate(['name' => strtolower($tagName)]);
+                $tagIds[] = $tag->id;
+            }
+            $tool->tags()->sync($tagIds);
+        }
+
+        $tool->load('tags');
+
+        return response()->json(new ToolResource($tool), 200);
+    }
+
+    /**
+     * @OA\Delete(
+     *     path="/api/tools/{tool}",
+     *     tags={"Tools"},
+     *     summary="Excluir uma ferramenta",
+     *     operationId="deleteTool",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="tool",
+     *         in="path",
+     *         description="ID da ferramenta",
+     *         required=true,
+     *         @OA\Schema(type="string", example="1")
+     *     ),
+     *     @OA\Response(
+     *         response=204,
+     *         description="Ferramenta excluída com sucesso"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Permissão negada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="You do not own this tool.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Ferramenta não encontrada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Tool not found.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Não autenticado",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
+     * )
+     */
+    public function destroy(string $toolId) : JsonResponse
+    {
+        $tool = Tool::where('id', $toolId)->first();
+
+        if (! $tool) {
+            return response()->json(['message' => 'Tool not found.'], 404);
+        }
+
+        if (! Gate::allows('delete', $tool)) {
+            return response()->json(['message' => 'You do not own this tool.'], 403);
+        }
+
+        $tool->delete();
+
+        return response()->json([], 204);
     }
 }

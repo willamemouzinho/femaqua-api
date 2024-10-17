@@ -1,66 +1,145 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# FEMAQUA - API REST para Gerenciamento de Ferramentas
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Bem-vindo à **FEMAQUA** (Ferramentas Maravilhosas Que Adoro), um repositório simples para gerenciar ferramentas. Este projeto é uma API REST desenvolvida em Laravel como parte de um teste backend. A aplicação permite o cadastro de usuários, autenticação via token, e o gerenciamento de ferramentas.
 
-## About Laravel
+## Sumário
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   [Descrição do Projeto](#descri%C3%A7%C3%A3o-do-projeto)
+-   [Tecnologias Utilizadas](#tecnologias-utilizadas)
+-   [Requisitos](#requisitos)
+-   [Instalação](#instala%C3%A7%C3%A3o)
+-   [Estrutura de Endpoints](#estrutura-de-endpoints)
+-   [Instruções de Execução](#instru%C3%A7%C3%B5es-de-execu%C3%A7%C3%A3o)
+-   [Testes](#testes)
+-   [Documentação](#documenta%C3%A7%C3%A3o)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Descrição do Projeto
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+O objetivo do projeto **FEMAQUA** é fornecer uma API para gerenciar um repositório de ferramentas. A API oferece funcionalidades de criação, visualização, edição e exclusão de ferramentas, além de autenticação de usuários via tokens.
 
-## Learning Laravel
+As ferramentas possuem os seguintes atributos:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+-   Nome
+-   Link
+-   Descrição
+-   Tags
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Tecnologias Utilizadas
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-   [Laravel 11](https://laravel.com/)
+-   [Docker](https://www.docker.com/)
+-   [PostgreSQL](https://www.postgresql.org/)
+-   [L5-Swagger](https://github.com/DarkaOnLine/L5-Swagger)
+-   [Pest](https://pestphp.com/)
 
-## Laravel Sponsors
+## Requisitos
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Para executar o projeto, você precisará dos seguintes requisitos:
 
-### Premium Partners
+-   **PHP** >= 8.2
+-   **Composer**
+-   **Docker** (para gerenciamento de banco de dados)
+-   **Ferramenta de desenvolvimento local** (Herd, Laravel Valet, XAMPP, WAMP, ou outro servidor web)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Instalação
 
-## Contributing
+Siga os passos abaixo para instalar e configurar o projeto localmente:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. **Clonar o repositório**:
 
-## Code of Conduct
+```bash
+git clone https://github.com/seu-usuario/fequama.git
+cd femaqua
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. **Configurar o arquivo `.env`**: Renomeie o arquivo `.env.example` para `.env`:
 
-## Security Vulnerabilities
+```bash
+mv .env.example .env
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Em seguida, edite a variável `APP_URL` no arquivo `.env` para corresponder ao ambiente local:
 
-## License
+```dotenv
+APP_URL=http://localhost
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+3. **Instalar dependências do PHP**: Rode o comando abaixo para instalar todas as dependências do projeto:
+
+```bash
+composer install
+```
+
+4. **Gerar chave de aplicação**: Crie uma chave de criptografia para a aplicação:
+
+```bash
+php artisan key:generate
+```
+
+5. **Subir o banco de dados com Docker**: Utilize o Docker para levantar o banco de dados PostgreSQL:
+
+```bash
+docker compose up -d
+```
+
+6. **Rodar as migrações**: Execute as migrações para criar as tabelas no banco de dados:
+
+```bash
+php artisan migrate
+```
+
+Agora, o projeto está configurado e pronto para uso.
+
+## Estrutura de Endpoints
+
+Aqui estão os principais endpoints da API para gerenciar as ferramentas:
+
+### Autenticação
+
+A API utiliza **Laravel Sanctum** para autenticação via token. Para acessar os endpoints protegidos, é necessário fazer login e obter um token de autenticação.
+
+-   `POST /api/auth/register` - Registrar um novo usuário e obter o token.
+-   `POST /api/auth/login` - Fazer login e obter o token.
+-   `POST /api/auth/logout` - Realizar logout e invalidar o token.
+
+### Ferramentas
+
+Ao fazer requisições a essas rotas, o token deve ser incluído no cabeçalho `Authorization` como um `Bearer` token. Além disso, os endpoints PUT e DELETE são protegidos por autorização, ou seja, apenas o usuário que criou uma ferramenta pode atualizar ou apagar.
+
+-   `POST /api/tools` - Criar uma nova ferramenta.
+-   `GET /api/tools?tag=` - Listar todas as ferramentas com opção de filtro por tag.
+-   `GET /api/tools/:id` - Exibir uma ferramenta específica.
+-   `PUT /api/tools/:id` - Atualizar uma ferramenta existente.
+-   `DELETE /api/tools/:id` - Deletar uma ferramenta.
+
+## Instruções de Execução
+
+Para rodar o projeto localmente, siga estas etapas:
+
+1. Certifique-se de que o Docker está em execução.
+2. Suba os contêineres com o seguinte comando:
+
+```bash
+docker compose up -d
+```
+
+3. Rode o servidor de desenvolvimento do Laravel:
+
+```bash
+php artisan serve
+```
+
+O servidor estará disponível em `http://localhost:PORT`.
+
+## Testes
+
+## Documentação
+
+-   A autenticação foi implementada usando **Laravel Sanctum**, que permite a autenticação via API Tokens.
+-   O banco de dados utilizado é o **PostgreSQL**, configurado com Docker.
+-   Ainda não foi realizada a documentação com **Swagger** nem a implementação dos testes automatizados. Estes serão adicionados futuramente.
+
+Sugestões de melhorias futuras:
+
+-   Implementar testes unitários e de integração com `phpunit`.
+-   Adicionar documentação completa da API utilizando Swagger ou outro framework de documentação.

@@ -16,15 +16,7 @@ class Tool extends Model
         'link',
         'description',
         'user_id',
-        // 'tags',
     ];
-
-    // protected function casts() : array
-    // {
-    //     return [
-    //         'tags' => 'array',
-    //     ];
-    // }
 
     public function tags() : BelongsToMany
     {
