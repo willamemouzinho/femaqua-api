@@ -4,14 +4,14 @@ Bem-vindo à **FEMAQUA** (Ferramentas Maravilhosas Que Adoro), um repositório s
 
 ## Sumário
 
--   [Descrição do Projeto](#descri%C3%A7%C3%A3o-do-projeto)
--   [Tecnologias Utilizadas](#tecnologias-utilizadas)
--   [Requisitos](#requisitos)
--   [Instalação](#instala%C3%A7%C3%A3o)
--   [Estrutura de Endpoints](#estrutura-de-endpoints)
--   [Instruções de Execução](#instru%C3%A7%C3%B5es-de-execu%C3%A7%C3%A3o)
--   [Testes](#testes)
--   [Documentação](#documenta%C3%A7%C3%A3o)
+- [Descrição do Projeto](#descri%C3%A7%C3%A3o-do-projeto)
+- [Tecnologias Utilizadas](#tecnologias-utilizadas)
+- [Requisitos](#requisitos)
+- [Instalação](#instala%C3%A7%C3%A3o)
+- [Estrutura de Endpoints](#estrutura-de-endpoints)
+- [Instruções de Execução](#instru%C3%A7%C3%B5es-de-execu%C3%A7%C3%A3o)
+- [Testes](#testes)
+- [Documentação](#documenta%C3%A7%C3%A3o)
 
 ## Descrição do Projeto
 
@@ -19,27 +19,27 @@ O objetivo do projeto **FEMAQUA** é fornecer uma API para gerenciar um reposit�
 
 As ferramentas possuem os seguintes atributos:
 
--   Nome
--   Link
--   Descrição
--   Tags
+- Nome
+- Link
+- Descrição
+- Tags
 
 ## Tecnologias Utilizadas
 
--   [Laravel 11](https://laravel.com/)
--   [Docker](https://www.docker.com/)
--   [PostgreSQL](https://www.postgresql.org/)
--   [L5-Swagger](https://github.com/DarkaOnLine/L5-Swagger)
--   [Pest](https://pestphp.com/)
+- [Laravel 11](https://laravel.com/)
+- [Docker](https://www.docker.com/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [L5-Swagger](https://github.com/DarkaOnLine/L5-Swagger)
+- [Pest](https://pestphp.com/)
 
 ## Requisitos
 
 Para executar o projeto, você precisará dos seguintes requisitos:
 
--   **PHP** >= 8.2
--   **Composer**
--   **Docker** (para gerenciamento de banco de dados)
--   **Ferramenta de desenvolvimento local** (Herd, Laravel Valet, XAMPP, WAMP, ou outro servidor web)
+- **PHP** >= 8.2
+- **Composer**
+- **Docker** (para gerenciamento de banco de dados)
+- **Ferramenta de desenvolvimento local** (Herd, Laravel Valet, XAMPP, WAMP, ou outro servidor web)
 
 ## Instalação
 
@@ -98,19 +98,19 @@ Aqui estão os principais endpoints da API para gerenciar as ferramentas:
 
 A API utiliza **Laravel Sanctum** para autenticação via token. Para acessar os endpoints protegidos, é necessário fazer login e obter um token de autenticação.
 
--   `POST /api/auth/register` - Registrar um novo usuário e obter o token.
--   `POST /api/auth/login` - Fazer login e obter o token.
--   `POST /api/auth/logout` - Realizar logout e invalidar o token.
+- `POST /api/auth/register` - Registrar um novo usuário e obter o token.
+- `POST /api/auth/login` - Fazer login e obter o token.
+- `POST /api/auth/logout` - Realizar logout e invalidar o token.
 
 ### Ferramentas
 
 Ao fazer requisições a essas rotas, o token deve ser incluído no cabeçalho `Authorization` como um `Bearer` token. Além disso, os endpoints PUT e DELETE são protegidos por autorização, ou seja, apenas o usuário que criou uma ferramenta pode atualizar ou apagar.
 
--   `POST /api/tools` - Criar uma nova ferramenta.
--   `GET /api/tools?tag=` - Listar todas as ferramentas com opção de filtro por tag.
--   `GET /api/tools/:id` - Exibir uma ferramenta específica.
--   `PUT /api/tools/:id` - Atualizar uma ferramenta existente.
--   `DELETE /api/tools/:id` - Deletar uma ferramenta.
+- `POST /api/tools` - Criar uma nova ferramenta.
+- `GET /api/tools?tag=` - Listar todas as ferramentas com opção de filtro por tag.
+- `GET /api/tools/:id` - Exibir uma ferramenta específica.
+- `PUT /api/tools/:id` - Atualizar uma ferramenta existente.
+- `DELETE /api/tools/:id` - Deletar uma ferramenta.
 
 ## Instruções de Execução
 
@@ -133,13 +133,22 @@ O servidor estará disponível em `http://localhost:PORT`.
 
 ## Testes
 
+Usando Pest
+
 ## Documentação
 
--   A autenticação foi implementada usando **Laravel Sanctum**, que permite a autenticação via API Tokens.
--   O banco de dados utilizado é o **PostgreSQL**, configurado com Docker.
--   Ainda não foi realizada a documentação com **Swagger** nem a implementação dos testes automatizados. Estes serão adicionados futuramente.
+Usando L5-Swagger
+
+php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
+php artisan l5-swagger:generate
+APP_URL/api/docs, por exemplo <http://localhost:8000/api/docs>
+
+## Informações Adicionais
+
+- A autenticação foi implementada usando **Laravel Sanctum**, que permite a autenticação via API Tokens. Os tokens tem o tempo de expiração de uma semana.
+- O banco de dados utilizado é o **PostgreSQL**, configurado com Docker.
 
 Sugestões de melhorias futuras:
 
--   Implementar testes unitários e de integração com `phpunit`.
--   Adicionar documentação completa da API utilizando Swagger ou outro framework de documentação.
+- Implementar testes unitários e de integração com `phpunit`.
+- Adicionar documentação completa da API utilizando Swagger ou outro framework de documentação.

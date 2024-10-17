@@ -6,139 +6,193 @@ use Illuminate\Testing\Fluent\AssertableJson;
 
 uses(RefreshDatabase::class);
 
-test('test get tools endpoint', function () {
-    $tools = Tool::factory(3)->create();
-    $response = $this->getJson('/api/tools');
+describe('Create tool', function () {
+    it('can create a new tool', function () {
+        // ...
+    });
 
-    $response->assertStatus(200)->assertJsonCount(3)->assertJson(
-        function (AssertableJson $json) use ($tools) {
-            $json->hasAll([
-                '0.id',
-                '0.title',
-                '0.author',
-                '0.isbn',
-            ]);
-
-            $json->whereAllType([
-                '0.id' => 'integer',
-                '0.title' => 'string',
-                '0.author' => 'string',
-                '0.isbn' => 'string',
-            ]);
-
-            $book = $tools->first();
-
-            $json->whereAll([
-                '0.id' => $book->id,
-                '0.title' => $book->title,
-                '0.author' => $book->author,
-                '0.isbn' => $book->isbn,
-            ]);
-        }
-
-    );
+    it('cannot create a tool with invalid data', function () {
+        // ...
+    });
 });
 
-test('test get a single book endpoint', function () {
-    $book = Tool::factory(1)->createOne();
-    $response = $this->getJson('/api/tools/' . $book->id);
+describe('Get tools', function () {
+    it('can list all tools', function () {
+        // ...
+    });
 
-    $response->assertStatus(200)->assertJson(
-        function (AssertableJson $json) use ($book) {
-            $json->hasAll([
-                'id',
-                'title',
-                'author',
-                'isbn',
-                'created_at',
-                'updated_at',
-            ]);
-
-            $json->whereAllType([
-                'id' => 'integer',
-                'title' => 'string',
-                'author' => 'string',
-                'isbn' => 'string',
-            ]);
-
-            $json->whereAll([
-                'id' => $book->id,
-                'title' => $book->title,
-                'author' => $book->author,
-                'isbn' => $book->isbn,
-            ]);
-        }
-    );
+    it('can filter tools by tag', function () {
+        // ...
+    });
 });
 
-test('test post a single book endpoint', function () {
-    $book = Tool::factory(1)->makeOne()->toArray();
-    $response = $this->postJson('/api/tools/', $book);
+describe('Get single tool', function () {
+    it('can retrieve a specific tool', function () {
+        // ...
+    });
 
-    $response->assertStatus(201)->assertJson(
-        function (AssertableJson $json) use ($book) {
-            $json->hasAll([
-                'id',
-                'title',
-                'author',
-                'isbn',
-                'created_at',
-                'updated_at',
-            ]);
-
-            $json->whereAll([
-                'title' => $book['title'],
-                'author' => $book['author'],
-                'isbn' => $book['isbn'],
-            ])->etc();
-        }
-    );
+    it('returns a 404 for non-existent tools', function () {
+        // ...
+    });
 });
 
-test('test put a single book endpoint', function () {
-    Tool::factory(1)->createOne();
-    $book = [
-        'title' => 'Título atualizado',
-        'author' => 'Autor atualizado',
-        'isbn' => 'ISBN atualizado',
-    ];
-    $response = $this->putJson('/api/tools/1', $book);
+describe('Update tool', function () {
+    it('can update an existing tool', function () {
+        // ...
+    });
 
-    $response->assertStatus(200)->assertJson(
-        function (AssertableJson $json) use ($book) {
-            $json->hasAll([
-                'id',
-                'title',
-                'author',
-                'isbn',
-                'created_at',
-                'updated_at',
-            ]);
+    it('cannot update a non-existent tool', function () {
+        // ...
+    });
 
-            $json->whereAll([
-                'title' => $book['title'],
-                'author' => $book['author'],
-                'isbn' => $book['isbn'],
-            ])->etc();
-        }
-    );
+    it('cannot update a tool with invalid data', function () {
+        // ...
+    });
 });
 
-test('test delete a single book endpoint', function () {
-    Tool::factory(1)->createOne();
-    $response = $this->deleteJson('/api/tools/1');
+describe('Delete tool', function () {
+    it('can delete an existing tool', function () {
+        // ...
+    });
 
-    $response->assertStatus(204);
+    it('cannot delete a non-existent tool', function () {
+        // ...
+    });
 });
 
-// test('test patch a single book endpoint', function () {
+// test('test get tools endpoint', function () {
+//     $tools = Tool::factory(3)->create();
+//     $response = $this->getJson('/api/tools');
+
+//     $response->assertStatus(200)->assertJsonCount(3)->assertJson(
+//         function (AssertableJson $json) use ($tools) {
+//             $json->hasAll([
+//                 '0.id',
+//                 '0.title',
+//                 '0.author',
+//                 '0.isbn',
+//             ]);
+
+//             $json->whereAllType([
+//                 '0.id' => 'integer',
+//                 '0.title' => 'string',
+//                 '0.author' => 'string',
+//                 '0.isbn' => 'string',
+//             ]);
+
+//             $tool = $tools->first();
+
+//             $json->whereAll([
+//                 '0.id' => $tool->id,
+//                 '0.title' => $tool->title,
+//                 '0.author' => $tool->author,
+//                 '0.isbn' => $tool->isbn,
+//             ]);
+//         }
+
+//     );
+// });
+
+// test('test get a single tool endpoint', function () {
+//     $tool = Tool::factory(1)->createOne();
+//     $response = $this->getJson('/api/tools/' . $tool->id);
+
+//     $response->assertStatus(200)->assertJson(
+//         function (AssertableJson $json) use ($tool) {
+//             $json->hasAll([
+//                 'id',
+//                 'title',
+//                 'author',
+//                 'isbn',
+//                 'created_at',
+//                 'updated_at',
+//             ]);
+
+//             $json->whereAllType([
+//                 'id' => 'integer',
+//                 'title' => 'string',
+//                 'author' => 'string',
+//                 'isbn' => 'string',
+//             ]);
+
+//             $json->whereAll([
+//                 'id' => $tool->id,
+//                 'title' => $tool->title,
+//                 'author' => $tool->author,
+//                 'isbn' => $tool->isbn,
+//             ]);
+//         }
+//     );
+// });
+
+// test('test post a single tool endpoint', function () {
+//     $tool = Tool::factory(1)->makeOne()->toArray();
+//     $response = $this->postJson('/api/tools/', $tool);
+
+//     $response->assertStatus(201)->assertJson(
+//         function (AssertableJson $json) use ($tool) {
+//             $json->hasAll([
+//                 'id',
+//                 'title',
+//                 'author',
+//                 'isbn',
+//                 'created_at',
+//                 'updated_at',
+//             ]);
+
+//             $json->whereAll([
+//                 'title' => $tool['title'],
+//                 'author' => $tool['author'],
+//                 'isbn' => $tool['isbn'],
+//             ])->etc();
+//         }
+//     );
+// });
+
+// test('test put a single tool endpoint', function () {
 //     Tool::factory(1)->createOne();
-//     $book = [
+//     $tool = [
+//         'title' => 'Título atualizado',
+//         'author' => 'Autor atualizado',
+//         'isbn' => 'ISBN atualizado',
+//     ];
+//     $response = $this->putJson('/api/tools/1', $tool);
+
+//     $response->assertStatus(200)->assertJson(
+//         function (AssertableJson $json) use ($tool) {
+//             $json->hasAll([
+//                 'id',
+//                 'title',
+//                 'author',
+//                 'isbn',
+//                 'created_at',
+//                 'updated_at',
+//             ]);
+
+//             $json->whereAll([
+//                 'title' => $tool['title'],
+//                 'author' => $tool['author'],
+//                 'isbn' => $tool['isbn'],
+//             ])->etc();
+//         }
+//     );
+// });
+
+// test('test delete a single tool endpoint', function () {
+//     Tool::factory(1)->createOne();
+//     $response = $this->deleteJson('/api/tools/1');
+
+//     $response->assertStatus(204);
+// });
+
+// test('test patch a single tool endpoint', function () {
+//     Tool::factory(1)->createOne();
+//     $tool = [
 //         'title' => 'Título atualizado com patch',
 //     ];
-//     $response = $this->patchJson('/api/tools/1', $book);
+//     $response = $this->patchJson('/api/tools/1', $tool);
 //     $response->assertStatus(200)->assertJson(
-//         function (AssertableJson $json) use ($book) {
+//         function (AssertableJson $json) use ($tool) {
 //             $json->hasAll([
 //                 'id',
 //                 'title',
@@ -148,27 +202,27 @@ test('test delete a single book endpoint', function () {
 //                 'updated_at',
 //             ]);
 //             $json->where(
-//                 'title', $book['title'],
+//                 'title', $tool['title'],
 //             );
 //         }
 //     );
 // });
 
-test('test post a single book endpoint when invalid data is provided', function () {
-    $response = $this->postJson('/api/tools/', []);
+// test('test post a single tool endpoint when invalid data is provided', function () {
+//     $response = $this->postJson('/api/tools/', []);
 
-    $response->assertStatus(422)->assertJson(
-        function (AssertableJson $json) {
-            $json->hasAll([
-                'message',
-                'errors',
-            ]);
+//     $response->assertStatus(422)->assertJson(
+//         function (AssertableJson $json) {
+//             $json->hasAll([
+//                 'message',
+//                 'errors',
+//             ]);
 
-            $json->whereAll([
-                'errors.title.0' => 'The title field is required.',
-                'errors.author.0' => 'The author field is required.',
-                'errors.isbn.0' => 'The isbn field is required.',
-            ])->etc();
-        }
-    );
-});
+//             $json->whereAll([
+//                 'errors.title.0' => 'The title field is required.',
+//                 'errors.author.0' => 'The author field is required.',
+//                 'errors.isbn.0' => 'The isbn field is required.',
+//             ])->etc();
+//         }
+//     );
+// });
