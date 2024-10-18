@@ -58,10 +58,10 @@ cd femaqua-api
 mv .env.example .env
 ```
 
-Em seguida, edite a variável `APP_URL` no arquivo `.env` para corresponder ao seu ambiente local:
+Em seguida, edite a variável `APP_URL` no arquivo `.env` para corresponder ao seu ambiente local, por exemplo:
 
 ```dotenv
-APP_URL=http://localhost
+APP_URL=http://localhost:8000
 ```
 
 3. Rode o comando abaixo para instalar todas as dependências do projeto:
