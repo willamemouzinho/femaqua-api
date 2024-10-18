@@ -38,21 +38,21 @@ Para executar o projeto, você precisará dos seguintes requisitos:
 
 - **PHP** >= 8.2
 - **Composer**
-- **Docker** (para gerenciamento de banco de dados)
-- **Servidor web** (Nginx ou Apache por exemplo)
+- **Docker** (para gerenciamento do banco de dados)
+- **Servidor web** (Nginx ou Apache, por exemplo)
 
 ## Instalação
 
 Siga os passos abaixo para instalar e configurar o projeto localmente:
 
-1. **Clonar o repositório**:
+1. Clonar o repositório:
 
 ```bash
-git clone https://github.com/seu-usuario/fequama.git
-cd femaqua
+git clone https://github.com/willamemouzinho/femaqua-api
+cd femaqua-api
 ```
 
-2. **Configurar o arquivo `.env`**: Renomeie o arquivo `.env.example` para `.env`:
+2. Renomeie o arquivo `.env.example` para `.env`:
 
 ```bash
 mv .env.example .env
@@ -64,25 +64,25 @@ Em seguida, edite a variável `APP_URL` no arquivo `.env` para corresponder ao a
 APP_URL=http://localhost
 ```
 
-3. **Instalar dependências do PHP**: Rode o comando abaixo para instalar todas as dependências do projeto:
+3. Rode o comando abaixo para instalar todas as dependências do projeto:
 
 ```bash
 composer install
 ```
 
-4. **Gerar chave de aplicação**: Crie uma chave de criptografia para a aplicação:
+4. Crie uma chave de criptografia para a aplicação:
 
 ```bash
 php artisan key:generate
 ```
 
-5. **Subir o banco de dados com Docker**: Utilize o Docker para levantar o banco de dados PostgreSQL:
+5. Utilize o Docker para levantar o banco de dados PostgreSQL:
 
 ```bash
 docker compose up -d
 ```
 
-6. **Rodar as migrações**: Execute as migrações para criar as tabelas no banco de dados:
+6. Execute as migrações para criar as tabelas no banco de dados:
 
 ```bash
 php artisan migrate
@@ -104,13 +104,13 @@ A API utiliza **Laravel Sanctum** para autenticação via token. Para acessar os
 
 ### Ferramentas
 
-Ao fazer requisições a essas rotas, o token deve ser incluído no cabeçalho `Authorization` como um `Bearer` token. Além disso, os endpoints PUT e DELETE são protegidos por autorização, ou seja, apenas o usuário que criou uma ferramenta pode atualizar ou apagar.
+Ao fazer requisições a essas rotas, o token deve ser incluído no cabeçalho `Authorization` como um `Bearer` token (os tokens tem tempo de expiração de uma semana).
 
 - `POST /api/tools` - Criar uma nova ferramenta.
 - `GET /api/tools?tag=` - Listar todas as ferramentas com opção de filtro por tag.
-- `GET /api/tools/:id` - Exibir uma ferramenta específica.
-- `PUT /api/tools/:id` - Atualizar uma ferramenta existente.
-- `DELETE /api/tools/:id` - Deletar uma ferramenta.
+- `GET /api/tools/:id` - Exibir uma ferramenta específica (apenas o usuário que criou a ferramenta pode visualizá-la).
+- `PUT /api/tools/:id` - Atualizar uma ferramenta existente (apenas o usuário que criou a ferramenta pode atualizá-la).
+- `DELETE /api/tools/:id` - Deletar uma ferramenta (apenas o usuário que criou a ferramenta pode apagá-la).
 
 ## Instruções de Execução
 
@@ -129,7 +129,7 @@ docker compose up -d
 php artisan serve
 ```
 
-O servidor estará disponível em `http://localhost:PORT`.
+O servidor estará disponível em `APP_URL`, por exemplo, `http://localhost:8000`.
 
 ## Testes
 
@@ -141,11 +141,8 @@ php artisan test
 
 ## Documentação
 
-Para acessar a documentação Swagger acesse o `APP_URL/api/docs` no seu navegador, por exemplo <http://localhost:8000/api/docs>.
+Para acessar a documentação Swagger (OpenAPI 3.0) acesse o `APP_URL/api/docs` no seu navegador, por exemplo, <http://localhost:8000/api/docs>.
 
 ![Logo da API](.github/l5-swagger-femaqua.png)
 
-## !!Informações Adicionais
-
-- A autenticação foi implementada usando **Laravel Sanctum**, que permite a autenticação via API Tokens. Os tokens tem o tempo de expiração de uma semana.
-- O banco de dados utilizado é o **PostgreSQL**, configurado com Docker.
+Com 💜 By Willame Mouzinho
