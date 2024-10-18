@@ -10,7 +10,7 @@ class ToolSeeder extends Seeder
     public function run() : void
     {
         Tool::factory(10)->create([
-            'user_id' => 2,
+            'user_id' => 1
         ]);
     }
 }

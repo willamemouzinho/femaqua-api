@@ -38,7 +38,7 @@ class ToolResource extends JsonResource
             "description" => $this->description,
             "tags" => $this->whenLoaded('tags', fn () => $this->tags->pluck('name')->toArray()),
             "created_at" => $this->created_at,
-            "updated_at" => $this->updated_at,
+            "updated_at" => $this->updated_at
         ];
     }
 }

@@ -11,7 +11,7 @@ class PaginatedToolResource extends JsonResource
     {
         return [
             ...parent::toArray($request),
-            'data' => ToolResource::collection($this->resource->items()),
+            'data' => ToolResource::collection($this->resource->items())
         ];
     }
 }

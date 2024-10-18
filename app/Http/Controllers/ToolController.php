@@ -107,17 +107,17 @@ class ToolController extends Controller
      */
     public function index(Request $request) : JsonResponse
     {
-        $validatedData = $request->validate([
+        $validated_data = $request->validate([
             'page' => 'nullable|integer',
             'tag' => 'nullable|string|max:255',
         ]);
-        $tagFilter = $validatedData['tag'] ?? null;
+        $tag_filter = $validated_data['tag'] ?? null;
 
         $tools = Tool::
             where('user_id', $request->user()->id)
-            ->when($tagFilter, function (Builder $query) use ($tagFilter) {
-                return $query->whereHas('tags', function (Builder $query) use ($tagFilter) {
-                    $query->where('name', $tagFilter);
+            ->when($tag_filter, function (Builder $query) use ($tag_filter) {
+                return $query->whereHas('tags', function (Builder $query) use ($tag_filter) {
+                    $query->where('name', $tag_filter);
                 });
             })
             ->with('tags')
@@ -169,10 +169,10 @@ class ToolController extends Controller
      *     )
      * )
      */
-    public function show(string $toolId) : JsonResponse
+    public function show(string $tool_id) : JsonResponse
     {
         $tool = Tool::
-            where('id', $toolId)
+            where('id', $tool_id)
             ->with('tags')
             ->first();
 
@@ -231,21 +231,21 @@ class ToolController extends Controller
      */
     public function store(StoreToolRequest $request) : JsonResponse
     {
-        $toolData = $request->validated();
+        $tool_data = $request->validated();
         $tool = Tool::create([
-            'title' => $toolData['title'],
-            'link' => $toolData['link'],
-            'description' => $toolData['description'],
+            'title' => $tool_data['title'],
+            'link' => $tool_data['link'],
+            'description' => $tool_data['description'],
             'user_id' => $request->user()->id
         ]);
 
-        $tagIds = [];
-        foreach ($toolData['tags'] as $tagName) {
-            $tag = Tag::firstOrCreate(['name' => strtolower($tagName)]);
-            $tagIds[] = $tag->id;
+        $tag_ids = [];
+        foreach ($tool_data['tags'] as $tag_name) {
+            $tag = Tag::firstOrCreate(['name' => strtolower($tag_name)]);
+            $tag_ids[] = $tag->id;
         }
 
-        $tool->tags()->sync($tagIds);
+        $tool->tags()->sync($tag_ids);
         $tool->load('tags');
 
         return response()->json(new ToolResource($tool), 201);
@@ -314,10 +314,10 @@ class ToolController extends Controller
      *     )
      * )
      */
-    public function update(UpdateToolRequest $request, string $toolId) : JsonResponse
+    public function update(UpdateToolRequest $request, string $tool_id) : JsonResponse
     {
         $tool = Tool::
-            where('id', $toolId)
+            where('id', $tool_id)
             ->with('tags')
             ->first();
 
@@ -329,20 +329,20 @@ class ToolController extends Controller
             return response()->json(['message' => 'You do not own this tool.'], 403);
         }
 
-        $toolData = $request->validated();
+        $tool_data = $request->validated();
         $tool->update([
-            'title' => $toolData['title'],
-            'link' => $toolData['link'],
-            'description' => $toolData['description'],
+            'title' => $tool_data['title'],
+            'link' => $tool_data['link'],
+            'description' => $tool_data['description'],
         ]);
 
-        if (($toolData['tags'])) {
-            $tagIds = [];
-            foreach ($toolData['tags'] as $tagName) {
-                $tag = Tag::firstOrCreate(['name' => strtolower($tagName)]);
-                $tagIds[] = $tag->id;
+        if (($tool_data['tags'])) {
+            $tag_ids = [];
+            foreach ($tool_data['tags'] as $tag_name) {
+                $tag = Tag::firstOrCreate(['name' => strtolower($tag_name)]);
+                $tag_ids[] = $tag->id;
             }
-            $tool->tags()->sync($tagIds);
+            $tool->tags()->sync($tag_ids);
         }
 
         $tool->load('tags');
@@ -394,9 +394,9 @@ class ToolController extends Controller
      *     )
      * )
      */
-    public function destroy(string $toolId) : JsonResponse
+    public function destroy(string $tool_id) : JsonResponse
     {
-        $tool = Tool::where('id', $toolId)->first();
+        $tool = Tool::where('id', $tool_id)->first();
 
         if (! $tool) {
             return response()->json(['message' => 'Tool not found.'], 404);

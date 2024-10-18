@@ -15,7 +15,7 @@ class Tool extends Model
         'title',
         'link',
         'description',
-        'user_id',
+        'user_id'
     ];
 
     public function tags() : BelongsToMany

@@ -54,18 +54,17 @@ class AuthController extends Controller
      */
     public function register(AuthRegisterRequest $request) : JsonResponse
     {
-        $userData = $request->validated();
-        $hasEmail = User::select('id')->where("email", $userData["email"])->first();
+        $user_data = $request->validated();
+        $has_email = User::select('id')->where("email", $user_data["email"])->first();
 
-        if ($hasEmail) {
-            return response()->json([
-                'message' => 'The email provided already exists in our records.'], 422);
+        if ($has_email) {
+            return response()->json(['message' => 'The email provided already exists in our records.'], 422);
         }
 
         $user = User::create([
-            'name' => $userData['name'],
-            'email' => $userData['email'],
-            'password' => $userData['password'],
+            'name' => $user_data['name'],
+            'email' => $user_data['email'],
+            'password' => $user_data['password'],
         ]);
         $access_token = $user->createToken('API Token')->plainTextToken;
 
@@ -108,10 +107,10 @@ class AuthController extends Controller
      */
     public function login(AuthLoginRequest $request) : JsonResponse
     {
-        $userData = $request->validated();
-        $user = User::select('id', 'name', 'email', 'password', 'created_at')->where("email", $userData["email"])->first();
+        $user_data = $request->validated();
+        $user = User::select('id', 'name', 'email', 'password', 'created_at')->where("email", $user_data["email"])->first();
 
-        if (! $user || ! Hash::check($userData["password"], $user->password)) {
+        if (! $user || ! Hash::check($user_data["password"], $user->password)) {
             return response()->json(['message' => 'The provided credentials do not match our records.'], 401);
         }
 

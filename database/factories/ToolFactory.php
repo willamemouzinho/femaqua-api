@@ -11,7 +11,7 @@ class ToolFactory extends Factory
         return [
             'title' => fake()->word(),
             'link' => fake()->url(),
-            'description' => fake()->text(),
+            'description' => fake()->text()
         ];
     }
 }
