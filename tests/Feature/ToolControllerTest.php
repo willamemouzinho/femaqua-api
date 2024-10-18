@@ -12,14 +12,14 @@ describe('Create tool', function () {
     it('can create a new tool', function () {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
-        $data = [
+        $tool_data = [
             'title' => 'New Tool',
             'link' => 'https://example.com',
             'description' => 'A great tool for development',
             'tags' => ['PHP', 'Laravel']
         ];
 
-        $response = $this->postJson('/api/tools', $data);
+        $response = $this->postJson('/api/tools', $tool_data);
         $response->assertStatus(201);
         $this->assertDatabaseHas('tools', [
             'title' => 'New Tool',
@@ -50,26 +50,26 @@ describe('Create tool', function () {
     it('cannot create a tool with invalid data', function () {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
-        $data = [
+        $tool_data = [
             'description' => 'Missing title and link',
             'tags' => ['PHP', 'Laravel']
         ];
 
-        $response = $this->postJson('/api/tools', $data);
+        $response = $this->postJson('/api/tools', $tool_data);
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors(['title', 'link']);
     });
 
     it('cannot create a tool without being authenticated', function () {
-        $data = [
+        $tool_data = [
             'title' => 'New Tool',
             'link' => 'https://example.com',
             'description' => 'A great tool for development',
             'tags' => ['PHP', 'Laravel']
         ];
 
-        $response = $this->postJson('/api/tools', $data);
+        $response = $this->postJson('/api/tools', $tool_data);
         $response
             ->assertStatus(401)
             ->assertJson([
@@ -206,9 +206,9 @@ describe('Get a specific tool', function () {
     it('cannot retrieve a non-existent tool', function () {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
-        $nonExistentId = 9999;
+        $non_existent_id = 9999;
 
-        $response = $this->getJson("/api/tools/{$nonExistentId}");
+        $response = $this->getJson("/api/tools/{$non_existent_id}");
         $response
             ->assertStatus(404)
             ->assertJson([
@@ -218,12 +218,12 @@ describe('Get a specific tool', function () {
 
     it('cannot retrieve an specific tool if you are not the creator', function () {
         $owner = User::factory()->create();
-        $anotherUser = User::factory()->create();
+        $another_user = User::factory()->create();
         $tool = Tool::
             factory()
             ->has(Tag::factory()->count(3))
             ->create([
-                'user_id' => $anotherUser->id
+                'user_id' => $another_user->id
             ]);
         Sanctum::actingAs($owner);
 
@@ -236,8 +236,8 @@ describe('Get a specific tool', function () {
     });
 
     it('cannot retrieve a specific tool without being authenticated', function () {
-        $someId = 9999;
-        $response = $this->getJson("/api/tools/{$someId}");
+        $some_id = 9999;
+        $response = $this->getJson("/api/tools/{$some_id}");
 
         $response
             ->assertStatus(401)
@@ -258,14 +258,14 @@ describe('Update tool', function () {
                 'user_id' => $user->id
             ]);
 
-        $updatedData = [
+        $updated_data = [
             'title' => 'Updated Tool Title',
             'link' => 'https://updated-example.com',
             'description' => 'Updated description',
             'tags' => ['UpdatedTag1', 'UpdatedTag2'],
         ];
 
-        $response = $this->putJson("/api/tools/{$tool->id}", $updatedData);
+        $response = $this->putJson("/api/tools/{$tool->id}", $updated_data);
         $response->assertStatus(200);
 
         $this->assertDatabaseHas('tools', [
@@ -300,15 +300,15 @@ describe('Update tool', function () {
     it('cannot update a non-existent tool', function () {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
-        $nonExistentToolId = 9999;
-        $updatedData = [
+        $non_existent_tool_id = 9999;
+        $updated_data = [
             'title' => 'Nonexistent Tool',
             'link' => 'https://nonexistent.com',
             'description' => 'This tool does not exist',
             'tags' => ['NonexistentTag'],
         ];
 
-        $response = $this->putJson("/api/tools/{$nonExistentToolId}", $updatedData);
+        $response = $this->putJson("/api/tools/{$non_existent_tool_id}", $updated_data);
         $response
             ->assertStatus(404)
             ->assertJson([
@@ -320,12 +320,12 @@ describe('Update tool', function () {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
         $tool = Tool::factory()->create(['user_id' => $user->id]);
-        $invalidData = [
+        $invalid_data = [
             'description' => 'Updated description without title and link',
             'tags' => 'Not an array',
         ];
 
-        $response = $this->putJson("/api/tools/{$tool->id}", $invalidData);
+        $response = $this->putJson("/api/tools/{$tool->id}", $invalid_data);
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors(['title', 'link', 'tags']);
@@ -333,22 +333,22 @@ describe('Update tool', function () {
 
     it('cannot update an existing tool if you are not the creator', function () {
         $owner = User::factory()->create();
-        $anotherUser = User::factory()->create();
+        $another_user = User::factory()->create();
         $tool = Tool::
             factory()
             ->has(Tag::factory()->count(3))
             ->create([
-                'user_id' => $anotherUser->id
+                'user_id' => $another_user->id
             ]);
         Sanctum::actingAs($owner);
-        $updatedData = [
+        $updated_data = [
             'title' => 'Updated Tool Title',
             'link' => 'https://updated-example.com',
             'description' => 'Updated description',
             'tags' => ['UpdatedTag1', 'UpdatedTag2'],
         ];
 
-        $response = $this->putJson("/api/tools/{$tool->id}", $updatedData);
+        $response = $this->putJson("/api/tools/{$tool->id}", $updated_data);
         $response
             ->assertStatus(403)
             ->assertJson([
@@ -364,14 +364,14 @@ describe('Update tool', function () {
             ->create([
                 'user_id' => $user->id
             ]);
-        $updatedData = [
+        $updated_data = [
             'title' => 'Updated Tool Title',
             'link' => 'https://updated-example.com',
             'description' => 'Updated description',
             'tags' => ['UpdatedTag1', 'UpdatedTag2'],
         ];
 
-        $response = $this->putJson("/api/tools/{$tool->id}", $updatedData);
+        $response = $this->putJson("/api/tools/{$tool->id}", $updated_data);
         $response
             ->assertStatus(401)
             ->assertJson([
@@ -401,10 +401,9 @@ describe('Delete tool', function () {
     it('cannot delete a non-existent tool', function () {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
-        $nonExistentToolId = 9999;
+        $non_existent_tool_id = 9999;
 
-        $response = $this->deleteJson("/api/tools/{$nonExistentToolId}");
-
+        $response = $this->deleteJson("/api/tools/{$non_existent_tool_id}");
         $response
             ->assertStatus(404)
             ->assertJson([
@@ -414,12 +413,12 @@ describe('Delete tool', function () {
 
     it('cannot delete an existing tool if you are not the creator', function () {
         $owner = User::factory()->create();
-        $anotherUser = User::factory()->create();
+        $another_user = User::factory()->create();
         $tool = Tool::
             factory()
             ->has(Tag::factory()->count(3))
             ->create([
-                'user_id' => $anotherUser->id
+                'user_id' => $another_user->id
             ]);
         Sanctum::actingAs($owner);
 

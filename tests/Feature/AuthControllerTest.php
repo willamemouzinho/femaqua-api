@@ -8,14 +8,14 @@ uses(RefreshDatabase::class);
 
 describe('Registration', function () {
     it('can register a new user', function () {
-        $userData = [
+        $user_data = [
             'name' => 'John Doe',
             'email' => 'john.doe@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ];
 
-        $response = $this->postJson('/api/auth/register', $userData);
+        $response = $this->postJson('/api/auth/register', $user_data);
         $this->assertDatabaseHas('users', [
             'email' => 'john.doe@example.com',
         ]);
@@ -35,14 +35,14 @@ describe('Registration', function () {
     it('cannot register a user with an existing email', function () {
         User::factory()->create(['email' => 'john.doe@example.com']);
 
-        $userData = [
+        $user_data = [
             'name' => 'John Doe',
             'email' => 'john.doe@example.com',
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ];
 
-        $response = $this->postJson('/api/auth/register', $userData);
+        $response = $this->postJson('/api/auth/register', $user_data);
         $response
             ->assertStatus(422)
             ->assertJson([
@@ -51,14 +51,14 @@ describe('Registration', function () {
     });
 
     it('cannot register a user with invalid data', function () {
-        $invalidData = [
+        $invalid_data = [
             'name' => '',
             'email' => 'invalid-email',
             'password' => 'short',
             'password_confirmation' => 'different',
         ];
 
-        $response = $this->postJson('/api/auth/register', $invalidData);
+        $response = $this->postJson('/api/auth/register', $invalid_data);
         $response
             ->assertStatus(422)
             ->assertJsonValidationErrors(['name', 'email', 'password']);
