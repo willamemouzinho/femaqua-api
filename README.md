@@ -36,7 +36,7 @@ As ferramentas possuem os seguintes atributos:
 
 Para executar o projeto, você precisará dos seguintes requisitos:
 
-- **PHP** >= 8.2
+- **PHP** >= 8.2 (com driver do PostgreSQL instalado e habilitado)
 - **Composer**
 - **Docker** (para gerenciamento do banco de dados)
 
