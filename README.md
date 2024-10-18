@@ -1,6 +1,6 @@
 # FEMAQUA - API REST para Gerenciamento de Ferramentas
 
-Bem-vindo à **FEMAQUA** (Ferramentas Maravilhosas Que Adoro), um repositório simples para gerenciar ferramentas. Este projeto é uma API REST desenvolvida em Laravel como parte de um teste backend. A aplicação permite o cadastro de usuários, autenticação via token, e o gerenciamento de ferramentas.
+Bem-vindo à **FEMAQUA** (Ferramentas Maravilhosas Que Adoro), um repositório simples para gerenciar ferramentas. Este projeto é uma API REST desenvolvida em Laravel como parte de um teste backend. A aplicação permite o cadastro de usuários, autenticação via token e o gerenciamento de ferramentas.
 
 ## Sumário
 
