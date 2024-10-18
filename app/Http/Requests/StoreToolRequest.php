@@ -17,8 +17,7 @@ class StoreToolRequest extends FormRequest
             'title' => ['required', 'string'],
             'link' => ['required', 'url'],
             'description' => ['required', 'string'],
-            'tags' => ['required', 'array'],
-            // 'tags' => ['present', 'array'],
+            'tags' => ['required', 'array']
         ];
     }
 }
