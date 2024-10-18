@@ -57,12 +57,6 @@ cd femaqua-api
 mv .env.example .env
 ```
 
-Por padrão a aplicação vai rodar em `http://localhost:3000`, mas você pode edite a variável `APP_URL` no arquivo `.env` conforme sua necessidade, por exemplo:
-
-```dotenv
-APP_URL=http://localhost:8000
-```
-
 3. Rode o comando abaixo para instalar todas as dependências do projeto:
 
 ```bash
@@ -128,7 +122,11 @@ docker compose up -d
 php artisan serve
 ```
 
-O servidor estará disponível em `APP_URL`, por exemplo, `http://localhost:3000`.
+O servidor estará disponível em `http://localhost:8000`. Caso deseje mudar a porta padrão use a opção `--port`, por exemplo:
+
+```bash
+php artisan serve --port=3000
+```
 
 ## Testes
 
@@ -140,7 +138,7 @@ php artisan test
 
 ## Documentação
 
-Para acessar a documentação Swagger (OpenAPI 3.0) navegue até o endereço `APP_URL/api/docs` no seu navegador, por exemplo, <http://localhost:3000/api/docs>.
+Para acessar a documentação Swagger (OpenAPI 3.0) navegue até o endereço <http://localhost:8000/api/docs>. Caso tenha alterado a porta padrão, certifique-se de usar o endereço correto `http://localhost:NOVA_PORTA/api/docs`.
 
 ![Logo da API](.github/l5-swagger-femaqua.png)
 
