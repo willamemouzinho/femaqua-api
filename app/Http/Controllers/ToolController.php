@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * @OA\Tag(
@@ -33,7 +34,7 @@ class ToolController extends Controller
      *         in="query",
      *         description="Número da página para paginação",
      *         required=false,
-     *         @OA\Schema(type="integer", example=1)
+     *         @OA\Schema(type="string", example=1)
      *     ),
      *     @OA\Parameter(
      *         name="tag",
@@ -97,6 +98,13 @@ class ToolController extends Controller
      *         )
      *     ),
      *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid.")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=401,
      *         description="Não autenticado",
      *         @OA\JsonContent(
@@ -147,6 +155,13 @@ class ToolController extends Controller
      *         @OA\JsonContent(ref="#/components/schemas/ToolResource")
      *     ),
      *     @OA\Response(
+     *         response=422,
+     *         description="Erro de validação",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid.")
+     *         )
+     *     ),
+     *     @OA\Response(
      *         response=404,
      *         description="Ferramenta não encontrada",
      *         @OA\JsonContent(
@@ -171,6 +186,14 @@ class ToolController extends Controller
      */
     public function show(string $tool_id) : JsonResponse
     {
+        $validator = Validator::make(['tool_id' => $tool_id], [
+            'tool_id' => 'integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         $tool = Tool::
             where('id', $tool_id)
             ->with('tags')
@@ -316,6 +339,14 @@ class ToolController extends Controller
      */
     public function update(UpdateToolRequest $request, string $tool_id) : JsonResponse
     {
+        $validator = Validator::make(['tool_id' => $tool_id], [
+            'tool_id' => 'integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         $tool = Tool::
             where('id', $tool_id)
             ->with('tags')
@@ -396,6 +427,14 @@ class ToolController extends Controller
      */
     public function destroy(string $tool_id) : JsonResponse
     {
+        $validator = Validator::make(['tool_id' => $tool_id], [
+            'tool_id' => 'integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
         $tool = Tool::where('id', $tool_id)->first();
 
         if (! $tool) {

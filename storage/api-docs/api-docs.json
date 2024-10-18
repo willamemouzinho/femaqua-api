@@ -215,7 +215,7 @@
                         "description": "Número da página para paginação",
                         "required": false,
                         "schema": {
-                            "type": "integer",
+                            "type": "string",
                             "example": 1
                         }
                     },
@@ -276,6 +276,22 @@
                                         "to": {
                                             "type": "integer",
                                             "example": 4
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
                                         }
                                     },
                                     "type": "object"
@@ -427,6 +443,22 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ToolResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }

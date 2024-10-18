@@ -216,6 +216,16 @@ describe('Get a specific tool', function () {
             ]);
     });
 
+    it('returns validation error when tool id is not an integer', function () {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $response = $this->getJson('/api/tools/invalid-id');
+        $response
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['tool_id']);
+    });
+
     it('cannot retrieve an specific tool if you are not the creator', function () {
         $owner = User::factory()->create();
         $another_user = User::factory()->create();
@@ -316,6 +326,22 @@ describe('Update tool', function () {
             ]);
     });
 
+    it('returns validation error when tool id is not an integer', function () {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+        $updated_data = [
+            'title' => 'Updated Tool Title',
+            'link' => 'https://updated-example.com',
+            'description' => 'Updated description',
+            'tags' => ['UpdatedTag1', 'UpdatedTag2']
+        ];
+
+        $response = $this->putJson('/api/tools/invalid-id', $updated_data);
+        $response
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['tool_id']);
+    });
+
     it('cannot update a tool with invalid data', function () {
         $user = User::factory()->create();
         Sanctum::actingAs($user);
@@ -409,6 +435,16 @@ describe('Delete tool', function () {
             ->assertJson([
                 'message' => 'Tool not found.',
             ]);
+    });
+
+    it('returns validation error when tool id is not an integer', function () {
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $response = $this->deleteJson('/api/tools/invalid-id');
+        $response
+            ->assertStatus(422)
+            ->assertJsonValidationErrors(['tool_id']);
     });
 
     it('cannot delete an existing tool if you are not the creator', function () {
