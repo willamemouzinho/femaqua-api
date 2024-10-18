@@ -681,15 +681,15 @@
                             "application/json": {}
                         }
                     },
-                    "403": {
-                        "description": "Permissão negada",
+                    "422": {
+                        "description": "Erro de validação",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "You do not own this tool."
+                                            "example": "The given data was invalid."
                                         }
                                     },
                                     "type": "object"
@@ -706,6 +706,22 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Tool not found."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Permissão negada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "You do not own this tool."
                                         }
                                     },
                                     "type": "object"

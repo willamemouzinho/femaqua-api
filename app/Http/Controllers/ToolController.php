@@ -403,10 +403,10 @@ class ToolController extends Controller
      *         )
      *     ),
      *     @OA\Response(
-     *         response=403,
-     *         description="Permissão negada",
+     *         response=422,
+     *         description="Erro de validação",
      *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="You do not own this tool.")
+     *             @OA\Property(property="message", type="string", example="The given data was invalid.")
      *         )
      *     ),
      *     @OA\Response(
@@ -414,6 +414,13 @@ class ToolController extends Controller
      *         description="Ferramenta não encontrada",
      *         @OA\JsonContent(
      *             @OA\Property(property="message", type="string", example="Tool not found.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Permissão negada",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="You do not own this tool.")
      *         )
      *     ),
      *     @OA\Response(
