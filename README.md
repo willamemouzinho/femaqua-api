@@ -58,7 +58,7 @@ cd femaqua-api
 mv .env.example .env
 ```
 
-Em seguida, edite a variável `APP_URL` no arquivo `.env` para corresponder ao ambiente local:
+Em seguida, edite a variável `APP_URL` no arquivo `.env` para corresponder ao seu ambiente local:
 
 ```dotenv
 APP_URL=http://localhost
@@ -107,7 +107,7 @@ A API utiliza **Laravel Sanctum** para autenticação via token. Para acessar os
 Ao fazer requisições a essas rotas, o token deve ser incluído no cabeçalho `Authorization` como um `Bearer` token (os tokens tem tempo de expiração de uma semana).
 
 - `POST /api/tools` - Criar uma nova ferramenta.
-- `GET /api/tools?tag=` - Listar todas as ferramentas com opção de filtro por tag.
+- `GET /api/tools?tag=&page=` - Listar, de forma paginada, todas as ferramentas do usuário com opção de filtro por tag.
 - `GET /api/tools/:id` - Exibir uma ferramenta específica (apenas o usuário que criou a ferramenta pode visualizá-la).
 - `PUT /api/tools/:id` - Atualizar uma ferramenta existente (apenas o usuário que criou a ferramenta pode atualizá-la).
 - `DELETE /api/tools/:id` - Deletar uma ferramenta (apenas o usuário que criou a ferramenta pode apagá-la).
@@ -141,7 +141,7 @@ php artisan test
 
 ## Documentação
 
-Para acessar a documentação Swagger (OpenAPI 3.0) acesse o `APP_URL/api/docs` no seu navegador, por exemplo, <http://localhost:8000/api/docs>.
+Para acessar a documentação Swagger (OpenAPI 3.0) navegue até o endereço `APP_URL/api/docs` no seu navegador, por exemplo, <http://localhost:8000/api/docs>.
 
 ![Logo da API](.github/l5-swagger-femaqua.png)
 
