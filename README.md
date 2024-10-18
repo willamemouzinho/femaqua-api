@@ -39,7 +39,6 @@ Para executar o projeto, você precisará dos seguintes requisitos:
 - **PHP** >= 8.2
 - **Composer**
 - **Docker** (para gerenciamento do banco de dados)
-- **Servidor web** (Nginx ou Apache, por exemplo)
 
 ## Instalação
 
@@ -58,7 +57,7 @@ cd femaqua-api
 mv .env.example .env
 ```
 
-Em seguida, edite a variável `APP_URL` no arquivo `.env` para corresponder ao seu ambiente local, por exemplo:
+Por padrão a aplicação vai rodar em `http://localhost:3000`, mas você pode edite a variável `APP_URL` no arquivo `.env` conforme sua necessidade, por exemplo:
 
 ```dotenv
 APP_URL=http://localhost:8000
@@ -129,7 +128,7 @@ docker compose up -d
 php artisan serve
 ```
 
-O servidor estará disponível em `APP_URL`, por exemplo, `http://localhost:8000`.
+O servidor estará disponível em `APP_URL`, por exemplo, `http://localhost:3000`.
 
 ## Testes
 
@@ -141,7 +140,7 @@ php artisan test
 
 ## Documentação
 
-Para acessar a documentação Swagger (OpenAPI 3.0) navegue até o endereço `APP_URL/api/docs` no seu navegador, por exemplo, <http://localhost:8000/api/docs>.
+Para acessar a documentação Swagger (OpenAPI 3.0) navegue até o endereço `APP_URL/api/docs` no seu navegador, por exemplo, <http://localhost:3000/api/docs>.
 
 ![Logo da API](.github/l5-swagger-femaqua.png)
 
